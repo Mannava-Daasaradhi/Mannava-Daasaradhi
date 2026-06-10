@@ -21,7 +21,7 @@
 
 **ML researcher who also ships.** B.Tech in AI & Data Science (Class of 2028, CGPA 9.2) at Amrita Vishwa Vidyapeetham. I do applied ML research — explainable AI, multimodal fusion, graph learning — and I build the systems that serve models in production: APIs, drift detection, monitoring, all the way down to a TCP/IP stack in Rust.
 
-🔭 **Currently:** contributing to LLM inference open source (vLLM), building an XAI faithfulness benchmark, and pushing my research to arXiv.
+🔭 **Currently:** Building tcp stack from scratch 
 🌍 **Available:** remote work on full **US Eastern business hours** (my 6 PM–2 AM IST = 8:30 AM–4:30 PM ET).
 📫 **Reach me:** daasaradhimannava@gmail.com · [LinkedIn](https://linkedin.com/in/mannava-daasaradhi) <!-- FILL: · [Google Scholar](LINK) · [Website](LINK) — add the day they're live -->
 
