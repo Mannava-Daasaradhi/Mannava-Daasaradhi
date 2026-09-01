@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+#
+# Adapted from github.com/andriidrok1/andriidrok1, which originated this
+# approach of drawing profile graphics locally from the GraphQL API.
+#
 """Draw the profile README's stat graphics from the GitHub GraphQL API.
 
 No third-party services and no dependencies — standard library only.

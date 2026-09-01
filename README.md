@@ -11,61 +11,74 @@
 
 <img src="./hd-about.svg" width="620" alt="about"/>
 
-> B.Tech in AI &amp; Data Science at Amrita Vishwa Vidyapeetham, class of 2028.<br>
-> Models you can explain, and the systems that serve them.
+> I build the systems that make ML and LLMs run in production.<br>
+> B.Tech in AI &amp; Data Science, Amrita Vishwa Vidyapeetham, 2024–2028 · CGPA 9.2.
 
-Most of my work sits on both sides of that line: applied ML research — explainable<br>
-AI, multimodal fusion, graph learning — and the infrastructure it has to survive in,<br>
-from serving APIs and drift detection down to a TCP/IP stack in Rust. Right now<br>
-that's the stack: ARP, IPv4, ICMP and TCP in Linux userspace over a TUN device,<br>
-written to understand what every `model.predict()` call actually rides on.
+That means the whole column, not one layer of it: the MLOps primitives underneath<br>
+a platform, the serving stack that exposes a model with A/B testing and drift<br>
+alerts on top of it, and — because it all eventually rides on somebody else's<br>
+abstraction — a Raft consensus store in Go and a userspace TCP/IP stack in Rust,<br>
+written to find out what that abstraction actually does.
 
-Open to research internships and to remote ML engineering on US Eastern hours —<br>
-my 6 PM–2 AM IST is 8:30 AM–4:30 PM ET.
+First-author applied-ML research under review, in multimodal sensor-vision fusion<br>
+and graph-based intrusion detection.
 
-<img src="./hd-research.svg" width="620" alt="research"/>
-
-**Semantic intrusion detection** &nbsp;·&nbsp; <samp>graph ml, xai, security</samp><br>
-A heterogeneous GNN over network flows, a knowledge-graph reasoning stage, and an<br>
-LLM-written explanation attached to every detection — so a flag comes with its<br>
-reason. Under review, 2026.
-
-**Multimodal semiconductor yield prediction** &nbsp;·&nbsp; <samp>multimodal, manufacturing</samp><br>
-Late fusion of 591 process-sensor features with 4096 vision features taken from<br>
-the wafer map. Under review, 2026.
-
-Lead author on both: problem formulation, method design, and all experiments.
-
-<img src="./hd-stack.svg" width="620" alt="stack"/>
-
-<samp>python &nbsp; rust &nbsp; kotlin &nbsp; c++ &nbsp; sql &nbsp; pytorch &nbsp; scikit-learn &nbsp; fastapi &nbsp; docker &nbsp; prometheus &nbsp; grafana &nbsp; linux</samp>
+Open to remote internships · IST, and I work the US-hours overlap.
 
 <img src="./hd-projects.svg" width="620" alt="projects"/>
 
 **[MiniFlow-Serving](https://github.com/Mannava-Daasaradhi/MiniFlow-Serving)** &nbsp;·&nbsp; <samp>python, fastapi, docker</samp><br>
-A reverse-mode autograd engine written from scratch — tensors, graph, backprop, no<br>
-PyTorch — and then the layer that serves models trained on it: sticky A/B testing<br>
-decided by a two-proportion z-test, PSI drift detection on a background loop,<br>
-Prometheus into Grafana. 24 tests, 89% coverage.
+A model-serving stack: FastAPI `/predict` with sticky A/B assignment, PSI drift<br>
+detection on a background loop, Prometheus into Grafana, the whole thing up under<br>
+Docker Compose. The A/B arm is decided by a two-proportion z-test — B won at<br>
+p=0.012, +34% lift. p99 97 ms end-to-end under `hey`; 89% test coverage.
+
+**[MiniFlow](https://github.com/Mannava-Daasaradhi/MiniFlow)** &nbsp;·&nbsp; <samp>python</samp><br>
+The three primitives every ML platform is built on, reimplemented with zero<br>
+dependencies: an `ExperimentTracker` (SQLite-backed run logging and comparison), a<br>
+`ModelRegistry` (versioned save/load with metadata), and a `FeatureStore` (schema'd,<br>
+versioned, entity-keyed). 24 tests, 82% coverage. The point was to understand<br>
+MLflow, W&amp;B and Feast by rebuilding them.
+
+**[Distributed Raft KV](https://github.com/Mannava-Daasaradhi/Distributed_Raft_KV)** &nbsp;·&nbsp; <samp>go</samp><br>
+Raft consensus behind a linearizable KV store: leader election, log replication,<br>
+snapshotting and log compaction, disk persistence with crash recovery, a<br>
+consistent-hashing ring, and a five-node Docker Compose cluster. `kill -9` the<br>
+leader and a new one is elected in under 700 ms with committed data intact. CI runs<br>
+vet, build and `test -race`; 76% coverage on the consensus core.
+
+**[tcp-stack](https://github.com/Mannava-Daasaradhi/tcp-stack)** &nbsp;·&nbsp; <samp>rust</samp><br>
+A userspace TCP/IP stack over a TUN device — ARP, IPv4, ICMP, UDP and TCP, with<br>
+CUBIC and BBR congestion control, segment reassembly and RTT estimation on a<br>
+non-blocking event loop. Designed to interoperate with the standard Linux userspace<br>
+tools. 153 tests.
 
 **[LLM from Scratch](https://github.com/Mannava-Daasaradhi/LLM_from_Scratch)** &nbsp;·&nbsp; <samp>python, pytorch</samp><br>
-Tokenizer, multi-head attention, positional encodings, training loop, sampling —<br>
-all hand-built. I can whiteboard KV-caching and why RoPE works because I wrote them.
-
-**[S-XG-NID](https://github.com/Mannava-Daasaradhi/S-XG-NID)** &nbsp;·&nbsp; <samp>python, graph ml</samp><br>
-The research codebase for the intrusion-detection work above: heterogeneous graph<br>
-over CICIDS flows, knowledge-graph reasoning, generated explanations.
-
-**[FabMind](https://github.com/Mannava-Daasaradhi/FabMind-Semiconductor-AI)** &nbsp;·&nbsp; <samp>python</samp><br>
-The yield-prediction codebase, with the explainability tooling that goes with it.
-
-**[GlassBox-Attack](https://github.com/Mannava-Daasaradhi/GlassBox-Attack)** &nbsp;·&nbsp; <samp>python</samp><br>
-Adversarial attack and defense experiments — robustness evaluation of neural<br>
-classifiers, measured rather than asserted.
+A transformer language model end to end — BPE tokenizer, multi-head attention,<br>
+RoPE, the full training loop — trained on a Shakespeare corpus. Built to own the<br>
+internals rather than import them.
 
 **[StudyMetrics](https://github.com/Mannava-Daasaradhi/StudyMetrics)** &nbsp;·&nbsp; <samp>kotlin, android</samp><br>
-An Android app built as 18 CI-gated Gradle modules, because one module is a script<br>
-and eighteen is an architecture.
+A shipped Android app built as 18 CI-gated Gradle modules, because one module is a<br>
+script and eighteen is an architecture. [Battleship](https://github.com/Mannava-Daasaradhi/Battleship_android) shipped alongside it.
+
+<img src="./hd-research.svg" width="620" alt="research"/>
+
+**[S-XG-NID](https://github.com/Mannava-Daasaradhi/S-XG-NID)** &nbsp;·&nbsp; <samp>graph ml, xai, security</samp><br>
+A heterogeneous GNN over network flows (CICIDS) with a knowledge-graph reasoning<br>
+stage, so every detection carries an LLM-written explanation of why it fired.<br>
+First author. Manuscript under review.
+
+**[FabMind](https://github.com/Mannava-Daasaradhi/FabMind-Semiconductor-AI)** &nbsp;·&nbsp; <samp>multimodal, manufacturing</samp><br>
+Semiconductor yield prediction by late fusion of IoT sensor time-series with<br>
+wafer-map vision — 591 sensor features against 4096 image features — with the<br>
+explainability tooling to go with it. First author. Manuscript under review.
+
+<img src="./hd-stack.svg" width="620" alt="stack"/>
+
+<samp>python &nbsp; go &nbsp; rust &nbsp; kotlin &nbsp; c++ &nbsp; sql &nbsp; pytorch &nbsp; scikit-learn &nbsp; fastapi &nbsp; docker &nbsp; prometheus &nbsp; grafana &nbsp; linux</samp>
+
+<samp>transformers &nbsp; gnns &nbsp; lora/peft &nbsp; explainable &amp; adversarial ml &nbsp; model serving &nbsp; psi drift detection &nbsp; a/b testing &nbsp; raft &nbsp; tcp/ip &nbsp; github actions</samp>
 
 <img src="./hd-stats.svg" width="620" alt="stats"/>
 
@@ -104,8 +117,3 @@ default monospace is narrower would otherwise see it squeezed.
 
 Language totals cover public repositories only. `year.svg` uses the portrait's<br>
 character ramp: `:` `+` `#` `@`, quiet to loud.
-
-The portrait's source photograph is from [Pixabay](https://pixabay.com/photos/mask-hoodie-hacker-attack-2883635/),<br>
-under the Pixabay Content License. The layout and the generated-graphics approach<br>
-are adapted, with thanks, from<br>
-[andriidrok1](https://github.com/andriidrok1/andriidrok1).
