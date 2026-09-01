@@ -2,6 +2,8 @@
 
 <img src="./ascii.svg" width="460" alt="A hooded figure in a mask, drawn in ASCII"/>
 
+<img src="./terminal.svg" width="620" alt="A shell session"/>
+
 <img src="./stats.svg" width="620" alt="Contributions in the last year"/>
 
 [linkedin](https://linkedin.com/in/mannava-daasaradhi) &nbsp;·&nbsp;
@@ -76,9 +78,7 @@ explainability tooling to go with it. First author. Manuscript under review.
 
 <img src="./hd-stack.svg" width="620" alt="stack"/>
 
-<samp>python &nbsp; go &nbsp; rust &nbsp; kotlin &nbsp; c++ &nbsp; sql &nbsp; pytorch &nbsp; scikit-learn &nbsp; fastapi &nbsp; docker &nbsp; prometheus &nbsp; grafana &nbsp; linux</samp>
-
-<samp>transformers &nbsp; gnns &nbsp; lora/peft &nbsp; explainable &amp; adversarial ml &nbsp; model serving &nbsp; psi drift detection &nbsp; a/b testing &nbsp; raft &nbsp; tcp/ip &nbsp; github actions</samp>
+<img src="./badges.svg" width="620" alt="Languages and tools"/>
 
 <img src="./hd-stats.svg" width="620" alt="stats"/>
 
@@ -91,29 +91,3 @@ explainability tooling to go with it. First author. Manuscript under review.
 <img src="./year.svg" width="620" alt="The last year, one character per day"/>
 
 </div>
-
-<img src="./hd-about-this-page.svg" width="620" alt="about this page"/>
-
-Every graphic here is generated, not embedded from anyone else's server.<br>
-`ascii.svg` is a photograph pushed through a thirteen-character ramp by<br>
-[`scripts/make_hacker.py`](scripts/make_hacker.py) — the hood is lit against black,<br>
-so brightness is the ink and the backdrop falls away to blank paper. The shadow<br>
-inside the hood had to be drawn rather than traced: those pixels read exactly zero,<br>
-identical to the backdrop, so the script separates them by topology instead of by<br>
-tone — flood the darkness in from the border, and whatever it cannot reach is the<br>
-inside of the hood. The stat graphics and these section headings are drawn by<br>
-[a scheduled action](.github/workflows/stats.yml) straight from the GitHub GraphQL<br>
-API, once a day, committing only what changed.
-
-They animate with SMIL inside the SVG, because GitHub strips scripts from<br>
-READMEs — and since nothing loads from a third party, nothing here can<br>
-rate-limit or go dark. The headings are SVGs for the same reason: GitHub also<br>
-strips CSS, so an image is the only way to put this page's own typeface on them.
-
-The typeface is [JetBrains Mono](scripts/fonts), subset to just the characters<br>
-each graphic draws and inlined as base64. That isn't only for looks: the<br>
-portrait's grid assumes an advance width of exactly 0.600 em, and a viewer whose<br>
-default monospace is narrower would otherwise see it squeezed.
-
-Language totals cover public repositories only. `year.svg` uses the portrait's<br>
-character ramp: `:` `+` `#` `@`, quiet to loud.

@@ -60,10 +60,29 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
 """
 
 # The portrait's ink is the data ink, so every graphic reads as one material.
+# Colour is spent only where it carries a value — the headline numbers, the
+# series, the heat of a day. Decoration stays grey, so the eye goes to data.
 LIGHT = dict(data="#6e7681", emph="#424a53", dim="#8c959f",
-             rule="#d8dee4", surface="#ffffff")
+             rule="#d8dee4", surface="#ffffff",
+             accent="#1a7f37", glow="#2da44e")
 DARK = dict(data="#c9d1d9", emph="#f0f6fc", dim="#8b949e",
-            rule="#30363d", surface="#0d1117")
+            rule="#30363d", surface="#0d1117",
+            accent="#3fb950", glow="#56d364")
+
+# Five steps of the accent, quiet to loud, for the year map. Light and dark
+# need separate ramps: one set of greens cannot stay legible on both grounds.
+HEAT_LIGHT = ["#ebedef", "#aceebb", "#4ac26b", "#2da44e", "#116329"]
+HEAT_DARK = ["#161b22", "#033a16", "#196c2e", "#2ea043", "#56d364"]
+
+# GitHub's own linguist colours, so a bar is recognisable before it is read.
+LANG_COLORS = {
+    "python": "#3572A5", "html": "#e34c26", "css": "#563d7c",
+    "kotlin": "#A97BFF", "rust": "#dea584", "typescript": "#3178c6",
+    "javascript": "#f1e05a", "go": "#00ADD8", "c++": "#f34b7d",
+    "c": "#555555", "java": "#b07219", "shell": "#89e051",
+    "jupyter notebook": "#DA5B0B", "solidity": "#AA6746", "dockerfile": "#384d54",
+}
+LANG_FALLBACK = "#8b949e"
 # JBMono is the inlined subset below; the rest is a fallback for the unlikely
 # case a renderer ignores the embedded face.
 MONO = ("JBMono,ui-monospace,SFMono-Regular,Menlo,Consolas,"
@@ -202,15 +221,17 @@ def summarise(user):
 
 # ---------------------------------------------------------------- drawing
 
-def style(extra="", font=None):
+def style(extra="", font=None, dark_extra=""):
     def block(t):
         return (f".d-f{{fill:{t['data']}}}.d-s{{stroke:{t['data']}}}"
                 f".e-f{{fill:{t['emph']}}}.m-f{{fill:{t['dim']}}}"
-                f".u-s{{stroke:{t['rule']}}}.r{{stroke:{t['surface']}}}")
+                f".u-s{{stroke:{t['rule']}}}.r{{stroke:{t['surface']}}}"
+                f".a-f{{fill:{t['accent']}}}.a-s{{stroke:{t['accent']}}}"
+                f".g-f{{fill:{t['glow']}}}")
     return (f"<style>{font or font_text()}"
-            f"{block(LIGHT)}.w{{fill:{LIGHT['data']};opacity:.13}}{extra}"
+            f"{block(LIGHT)}.w{{fill:{LIGHT['accent']};opacity:.11}}{extra}"
             f"@media(prefers-color-scheme:dark){{{block(DARK)}"
-            f".w{{fill:{DARK['data']};opacity:.16}}}}</style>")
+            f".w{{fill:{DARK['accent']};opacity:.15}}{dark_extra}}}</style>")
 
 
 def head(w, h, font=None):
@@ -244,15 +265,21 @@ def label(x, y, text, size=11, cls="m-f", anchor="start", extra=""):
             f'{extra}>{text}</text>')
 
 
-def hbar(x, y, w, h, cls="d-f", r=3.0):
-    """Horizontal bar: rounded data-end on the right, square at the baseline."""
+def hbar(x, y, w, h, cls="d-f", r=3.0, colour=None):
+    """Horizontal bar: rounded data-end on the right, square at the baseline.
+
+    A literal `colour` wins over the themed class. Language bars need their
+    linguist colour, which is the same in light and dark and so cannot come
+    from the theme block.
+    """
     if w <= 0.6:
         return ""
     r = min(r, h / 2.0, w)
+    paint = f'fill="{colour}"' if colour else f'class="{cls}"'
     return (f'<path d="M{x:.1f} {y:.1f}H{x + w - r:.1f}'
             f'Q{x + w:.1f} {y:.1f} {x + w:.1f} {y + r:.1f}'
             f'V{y + h - r:.1f}Q{x + w:.1f} {y + h:.1f} {x + w - r:.1f} {y + h:.1f}'
-            f'H{x:.1f}Z" class="{cls}"/>')
+            f'H{x:.1f}Z" {paint}/>')
 
 
 def draw_stats(s):
@@ -262,7 +289,7 @@ def draw_stats(s):
     peak = max(weekly) or 1
     p = [head(WIDTH, H)]
     p.append(f'<g opacity="0">{fade(0.10)}'
-             + label(0, 50, s["total"], 52, "e-f", extra=' font-weight="600"')
+             + label(0, 50, s["total"], 52, "a-f", extra=' font-weight="600"')
              + label(0, 72, "contributions in the last year", 12) + '</g>')
     for i, (val, lab) in enumerate([(s["active"], "active days"),
                                     (s["best_week"], "best week")]):
@@ -283,12 +310,12 @@ def draw_stats(s):
              + f'L{pts[-1][0]:.1f} {base:.1f}Z" class="w"/>')
     p.append(f'<path d="M{pts[0][0]:.1f} {pts[0][1]:.1f}'
              + "".join(f'L{x:.1f} {y:.1f}' for x, y in pts[1:])
-             + f'" class="d-s" stroke-width="2" stroke-linejoin="round" '
+             + f'" class="a-s" stroke-width="2" stroke-linejoin="round" '
              f'stroke-linecap="round"/>')
     p.append("</g>")
     p.append(cursor)
     ex, ey = pts[-1]
-    p.append(f'<circle cx="{ex - 2:.1f}" cy="{ey:.1f}" r="4.5" class="e-f r" '
+    p.append(f'<circle cx="{ex - 2:.1f}" cy="{ey:.1f}" r="4.5" class="g-f r" '
              f'stroke-width="2" opacity="0">{fade(0.50 + REVEAL, 0.35)}</circle>')
     p.append("</svg>")
     return "".join(p)
@@ -311,7 +338,7 @@ def draw_streak(s):
     for i, (val, lab, span) in enumerate(cells):
         x = LEFT if i == 0 else mid + LEFT
         p.append(f'<g opacity="0">{fade(0.12 + i * 0.14)}'
-                 + label(x, 44, f"{val}", 34, "e-f", extra=' font-weight="600"')
+                 + label(x, 44, f"{val}", 34, "a-f", extra=' font-weight="600"')
                  + label(x, 64, lab, 11)
                  + label(x, 80, span, 10) + '</g>')
     p.append("</svg>")
@@ -319,7 +346,12 @@ def draw_streak(s):
 
 
 def draw_langs(s):
-    """Two small charts: share of bytes, and count of repos by main language."""
+    """Two small charts: share of bytes, and count of repos by main language.
+
+    Bars carry their language's own linguist colour. That is not decoration —
+    it is the same encoding GitHub uses everywhere else, so the reader matches
+    a bar to a language before reading a single label.
+    """
     rows = max(len(s["by_size"]), len(s["by_repo"]), 1)
     H = 26 + rows * 22 + 6
     colw = (WIDTH - LEFT - 30) / 2
@@ -343,12 +375,19 @@ def draw_langs(s):
         for ri, (name, val) in enumerate(data):
             y = 26 + ri * 22
             shown = (f"{val / total * 100:.0f}%" if as_pct else f"{val}")
+            colour = LANG_COLORS.get(name.lower(), LANG_FALLBACK)
             p.append(f'<g opacity="0">{fade(0.24 + gi * 0.10 + ri * 0.05)}'
-                     + label(gx, y + 8, name.lower()[:11], 11, "e-f")
+                     + f'<circle cx="{gx + 4:.0f}" cy="{y + 4.5:.0f}" r="4" '
+                       f'fill="{colour}"/>'
+                     + label(gx + 14, y + 8, name.lower()[:10], 11, "e-f")
                      + label(gx + colw - 6, y + 8, shown, 11, "m-f", "end")
                      + '</g>')
             p.append(f'<g clip-path="url(#{cid})">'
-                     + hbar(gx + name_w, y, bar_max * val / top, 7)
+                     + f'<rect x="{gx + name_w:.1f}" y="{y}" '
+                       f'width="{bar_max:.1f}" height="7" rx="3.5" '
+                       f'class="u-s" fill="none" opacity="0.5"/>'
+                     + hbar(gx + name_w, y, bar_max * val / top, 7,
+                            colour=colour)
                      + '</g>')
         p.append(cursor)
     p.append("</svg>")
@@ -377,13 +416,17 @@ def draw_heading(word):
 
 
 def draw_year(s):
-    """Seven rows by fifty-three weeks, intensity as a character."""
-    FS, LH, COLW = 9.2, 11.0, 2
-    CW = FS * 0.6
-    pad_l, pad_t = LEFT, 44
+    """Seven rows by fifty-three weeks, intensity as colour.
+
+    This was a character map in the portrait's ramp, which was consistent but
+    unreadable at a glance: thirteen greys all look alike at 9px. Squares in
+    five steps of the accent are the encoding every reader already knows.
+    """
+    CELL, GAP = 9, 2
+    PITCH = CELL + GAP
+    pad_l, pad_t = LEFT, 46
     weeks = s["weeks"]
-    ncols = len(weeks) * COLW
-    H = int(pad_t + 7 * LH + 26)
+    H = pad_t + 7 * PITCH + 24
 
     def level(v):
         for i, cut in enumerate((0, 2, 5, 9)):
@@ -391,58 +434,179 @@ def draw_year(s):
                 return i
         return 4
 
-    p = [head(WIDTH, H)]
+    heat = "".join(f".h{i}{{fill:{c}}}" for i, c in enumerate(HEAT_LIGHT))
+    heat_dark = "".join(f".h{i}{{fill:{c}}}" for i, c in enumerate(HEAT_DARK))
+    p = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{WIDTH}" '
+         f'height="{H}" viewBox="0 0 {WIDTH} {H}" fill="none" '
+         f'font-family="{MONO}">' + style(extra=heat, dark_extra=heat_dark)]
+
     p.append(f'<g opacity="0">{fade(0.10)}'
              + label(pad_l, 16, "THE YEAR", 9, "m-f",
                      extra=' letter-spacing="1.3"')
-             + label(pad_l, 32, f"{s['active']} of "
+             + label(pad_l, 33, f"{s['active']} of "
                      f"{sum(len(w) for w in weeks)} days had a contribution", 11)
              + '</g>')
 
-    # ramp legend, so the encoding is never carried by shade alone
-    lx = WIDTH - 6
-    p.append(f'<g opacity="0">{fade(1.30)}'
-             + label(lx - 78, 32, "less", 9, "m-f", "end")
-             + f'<text xml:space="preserve" x="{lx - 72}" y="32" class="d-f" '
-             f'font-size="{FS}">{" ".join(RAMP[1:])}</text>'
-             + label(lx, 32, "more", 9, "m-f", "end") + '</g>')
+    # the legend, so the encoding is never carried by colour alone
+    lx = WIDTH - 4
+    p.append(f'<g opacity="0">{fade(1.15)}'
+             + label(lx - 5 * PITCH - 34, 33, "less", 9, "m-f", "end"))
+    for i in range(5):
+        p.append(f'<rect x="{lx - (5 - i) * PITCH - 26:.0f}" y="25" '
+                 f'width="{CELL}" height="{CELL}" rx="2" class="h{i}"/>')
+    p.append(label(lx, 33, "more", 9, "m-f", "end") + '</g>')
 
-    for r in range(7):
-        chars = []
-        for w in weeks:
-            day = next((d for d in w if d.get("weekday") == r), None)
-            v = day["contributionCount"] if day else 0
-            chars.append(RAMP[level(v)] * COLW)
-        line = "".join(chars).rstrip()
-        if not line:
-            continue
-        y = pad_t + r * LH
-        w_px = max(len(line), 1) * CW
-        cid = f"ry{r}"
-        delay = 0.30 + r * 0.07
-        p.append(f'<clipPath id="{cid}"><rect x="{pad_l}" y="{y}" '
-                 f'height="{LH}" width="0"><animate attributeName="width" '
-                 f'from="0" to="{w_px:.1f}" begin="{delay:.2f}s" dur="0.40s" '
-                 f'fill="freeze"/></rect></clipPath>')
-        safe = line.replace("&", "&amp;").replace("<", "&lt;")
-        p.append(f'<g clip-path="url(#{cid})"><text xml:space="preserve" '
-                 f'x="{pad_l}" y="{y + FS - 0.6:.1f}" class="d-f" '
-                 f'font-size="{FS}">{safe}</text></g>')
+    for wi, w in enumerate(weeks):
+        x = pad_l + wi * PITCH
+        # one fade per column, marching left to right, so the year fills in
+        delay = 0.28 + wi * 0.011
+        p.append(f'<g opacity="0">{fade(delay, 0.30)}')
+        for d in w:
+            r = d.get("weekday", 0)
+            y = pad_t + r * PITCH
+            p.append(f'<rect x="{x:.0f}" y="{y:.0f}" width="{CELL}" '
+                     f'height="{CELL}" rx="2" '
+                     f'class="h{level(d["contributionCount"])}"/>')
+        p.append("</g>")
 
     for r, lab in ((1, "mon"), (3, "wed"), (5, "fri")):
-        p.append(label(pad_l - 7, pad_t + r * LH + FS - 0.6, lab, 9, "m-f",
+        p.append(label(pad_l - 7, pad_t + r * PITCH + CELL - 1, lab, 9, "m-f",
                        "end"))
 
     last_m, last_x = None, -999.0
-    base_y = pad_t + 7 * LH + 13
+    base_y = pad_t + 7 * PITCH + 14
     for i, w in enumerate(weeks):
         m = int(w[0]["date"][5:7])
-        x = pad_l + i * COLW * CW
-        if m != last_m and i < len(weeks) - 1 and x - last_x >= 34:
+        x = pad_l + i * PITCH
+        if m != last_m and i < len(weeks) - 1 and x - last_x >= 38:
             p.append(label(x, base_y, MON[m - 1], 9, "m-f"))
             last_x = x
         last_m = m
 
+    p.append("</svg>")
+    return "".join(p)
+
+
+# The terminal block's script. Kept to plain ASCII: the inlined font is a
+# subset, and an arrow or an em dash would fall back to the viewer's own
+# monospace mid-line and break the column.
+SESSION = [
+    ("$ whoami", None),
+    ("mannava daasaradhi -- ai infrastructure", "a-f"),
+    ("$ cat focus.txt", None),
+    ("minidb: pager -> b+tree -> wal", "a-f"),
+    ("$ uptime", None),
+    ("shipping since 2024. still typing.", "a-f"),
+]
+CYCLE = 13.0          # seconds for one full loop
+TYPE_DUR = 0.55       # per line
+LINE_GAP = 0.85       # start-to-start
+HOLD_UNTIL = 11.4     # everything stays up until here, then clears
+
+STACK = [
+    ("python", "python"), ("go", "go"), ("rust", "rust"),
+    ("kotlin", "kotlin"), ("c++", "c++"), ("sql", None),
+    ("pytorch", None), ("fastapi", None), ("docker", "dockerfile"),
+    ("prometheus", None), ("grafana", None), ("raft", None),
+    ("tcp/ip", None), ("linux", None),
+]
+
+
+def draw_terminal():
+    """A looping shell session: lines type themselves, hold, clear, repeat.
+
+    The loop is one <animate> per line carrying values/keyTimes across the
+    whole cycle rather than a chain of begin= offsets. Chained SMIL restarts
+    are fragile in an <img> — one dropped event and the block sits blank
+    forever, which is exactly the failure a profile page cannot afford.
+    """
+    FS, LH = 12.5, 20
+    CW = FS * 0.6
+    pad_x, pad_y = 16, 40
+    H = pad_y + len(SESSION) * LH + 16
+
+    p = [head(WIDTH, H)]
+    # the window itself
+    p.append(f'<rect x="0.5" y="0.5" width="{WIDTH - 1}" height="{H - 1}" '
+             f'rx="7" class="u-s" fill="none"/>')
+    p.append(f'<line x1="0" y1="26" x2="{WIDTH}" y2="26" class="u-s"/>')
+    for i, c in enumerate(("#ff5f57", "#febc2e", "#28c840")):
+        p.append(f'<circle cx="{18 + i * 15}" cy="13.5" r="4.5" fill="{c}" '
+                 f'opacity="0.9"/>')
+    p.append(label(WIDTH / 2, 17, "mannava@github", 9.5, "m-f", "middle"))
+
+    for i, (text, cls) in enumerate(SESSION):
+        y = pad_y + i * LH
+        w = len(text) * CW
+        start = 0.5 + i * LINE_GAP
+        k = [0.0, start, start + TYPE_DUR, HOLD_UNTIL, HOLD_UNTIL + 0.25, CYCLE]
+        keytimes = ";".join(f"{t / CYCLE:.4f}" for t in k)
+        cid = f"t{i}"
+        # The rect starts at FULL width and the animation overrides it. A
+        # renderer that ignores SMIL then shows the finished session rather
+        # than an empty window -- the right resting state for a loop.
+        p.append(f'<clipPath id="{cid}"><rect x="{pad_x}" y="{y - LH + 6}" '
+                 f'height="{LH}" width="{w:.1f}">'
+                 f'<animate attributeName="width" '
+                 f'values="0;0;{w:.1f};{w:.1f};0;0" keyTimes="{keytimes}" '
+                 f'dur="{CYCLE}s" repeatCount="indefinite"/></rect></clipPath>')
+        p.append(f'<g clip-path="url(#{cid})">'
+                 + f'<text xml:space="preserve" x="{pad_x}" y="{y}" '
+                   f'class="{cls or "d-f"}" font-size="{FS}"'
+                 + (' font-weight="600"' if cls else '')
+                 + f'>{text}</text></g>')
+
+    # the cursor parks after the last line and blinks forever
+    ly = pad_y + (len(SESSION) - 1) * LH
+    lw = len(SESSION[-1][0]) * CW
+    p.append(f'<rect x="{pad_x + lw + 3:.1f}" y="{ly - 10:.0f}" width="7" '
+             f'height="13" class="a-f">'
+             f'<animate attributeName="opacity" values="1;1;0;0;1" '
+             f'keyTimes="0;0.45;0.5;0.95;1" dur="1.1s" '
+             f'repeatCount="indefinite"/></rect>')
+    p.append("</svg>")
+    return "".join(p)
+
+
+def draw_badges():
+    """The stack as pills, each carrying its language's colour where it has one."""
+    FS = 11.5
+    CW = FS * 0.6
+    PAD, GAP, BH = 11, 7, 25
+    dot = 11
+
+    rows, cur, x = [], [], 0.0
+    for name, lang in STACK:
+        w = PAD * 2 + len(name) * CW + (dot if lang else 0)
+        if x + w > WIDTH and cur:
+            rows.append(cur)
+            cur, x = [], 0.0
+        cur.append((name, lang, w))
+        x += w + GAP
+    if cur:
+        rows.append(cur)
+
+    H = len(rows) * (BH + GAP) - GAP + 2
+    p = [head(WIDTH, H)]
+    n = 0
+    for ri, row in enumerate(rows):
+        x = 0.0
+        for name, lang, w in row:
+            y = ri * (BH + GAP)
+            colour = LANG_COLORS.get(lang) if lang else None
+            p.append(f'<g opacity="0">{fade(0.08 + n * 0.045, 0.4)}')
+            p.append(f'<rect x="{x:.1f}" y="{y}" width="{w:.1f}" '
+                     f'height="{BH}" rx="{BH / 2:.1f}" class="u-s" '
+                     f'fill="none"/>')
+            tx = x + PAD
+            if colour:
+                p.append(f'<circle cx="{tx + 3:.1f}" cy="{y + BH / 2:.1f}" '
+                         f'r="3.5" fill="{colour}"/>')
+                tx += dot
+            p.append(label(tx, y + BH / 2 + 4, name, FS, "e-f"))
+            p.append("</g>")
+            x += w + GAP
+            n += 1
     p.append("</svg>")
     return "".join(p)
 
@@ -470,9 +634,9 @@ def main():
 
     s = summarise(fetch(login, token))
     files = {"stats.svg": draw_stats(s), "streak.svg": draw_streak(s),
-             "langs.svg": draw_langs(s), "year.svg": draw_year(s)}
-    for word in ("about", "research", "stack", "projects", "stats",
-                 "about this page"):
+             "langs.svg": draw_langs(s), "year.svg": draw_year(s),
+             "terminal.svg": draw_terminal(), "badges.svg": draw_badges()}
+    for word in ("about", "research", "stack", "projects", "stats"):
         files[f"hd-{word.replace(' ', '-')}.svg"] = draw_heading(word)
 
     changed = [n for n, svg in files.items()
