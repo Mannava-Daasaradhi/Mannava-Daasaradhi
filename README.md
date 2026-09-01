@@ -1,105 +1,111 @@
-<!-- ============================================================
-  PROFILE README for github.com/Mannava-Daasaradhi
-  Setup: create a PUBLIC repo named exactly  Mannava-Daasaradhi
-  and put this file in it as README.md — GitHub renders it on
-  your profile page automatically.
+<div align="center">
 
-  BEFORE COMMITTING — search this file for "FILL:" and resolve
-  every one. Do NOT ship a placeholder (you did that on the
-  resume once already).
+<img src="./ascii.svg" width="460" alt="A hooded figure in a mask, drawn in ASCII"/>
 
-  ALSO REQUIRED or this README is lipstick on a hidden profile:
-  1. Settings → Public profile → make activity/contributions PUBLIC
-  2. Add bio, location, email, website to profile sidebar
-  3. Pin: MiniFlow-Serving · LLM_from_Scratch · S-XG-NID · tcp-stack
-  4. Add a description to LLM_from_Scratch (currently blank)
-  5. Fix the broken MiniFlow link in MiniFlow-Serving's README
-  6. Reduce 30 public repos to ~8 (archive/private the rest)
-============================================================ -->
+<img src="./stats.svg" width="620" alt="Contributions in the last year"/>
 
-# Hi, I'm Mannava Daasaradhi 👋
+[linkedin](https://linkedin.com/in/mannava-daasaradhi) &nbsp;·&nbsp;
+[email](mailto:daasaradhimannava@gmail.com)
 
-**ML researcher who also ships.** B.Tech in AI & Data Science (Class of 2028, CGPA 9.2) at Amrita Vishwa Vidyapeetham. I do applied ML research — explainable AI, multimodal fusion, graph learning — and I build the systems that serve models in production: APIs, drift detection, monitoring, all the way down to a TCP/IP stack in Rust.
+</div>
 
-🔭 **Currently:** Building tcp stack from scratch 
-🌍 **Available:** remote work on full **US Eastern business hours** (my 6 PM–2 AM IST = 8:30 AM–4:30 PM ET).
-📫 **Reach me:** daasaradhimannava@gmail.com · [LinkedIn](https://linkedin.com/in/mannava-daasaradhi) <!-- FILL: · [Google Scholar](LINK) · [Website](LINK) — add the day they're live -->
+<img src="./hd-about.svg" width="620" alt="about"/>
 
----
+> B.Tech in AI &amp; Data Science at Amrita Vishwa Vidyapeetham, class of 2028.<br>
+> Models you can explain, and the systems that serve them.
 
-## 🔬 Research
+Most of my work sits on both sides of that line: applied ML research — explainable<br>
+AI, multimodal fusion, graph learning — and the infrastructure it has to survive in,<br>
+from serving APIs and drift detection down to a TCP/IP stack in Rust. Right now<br>
+that's the stack: ARP, IPv4, ICMP and TCP in Linux userspace over a TUN device,<br>
+written to understand what every `model.predict()` call actually rides on.
 
-My research spans applied ML across domains — the common thread is **models you can trust and explain**.
+Open to research internships and to remote ML engineering on US Eastern hours —<br>
+my 6 PM–2 AM IST is 8:30 AM–4:30 PM ET.
 
-<!-- FILL: as each paper goes on arXiv or gets accepted, convert its row from
-     "under review" to a real link. NEVER name the venue of an under-review
-     paper publicly (double-blind policies); "under review, 2026" is enough. -->
+<img src="./hd-research.svg" width="620" alt="research"/>
 
-| Work | Area | Status |
-|---|---|---|
-| Semantic intrusion detection — heterogeneous GNN over network flows + knowledge-graph reasoning + LLM-generated explanations | Graph ML · XAI · Security | <!-- FILL: arXiv link or "under review, 2026" --> |
-| Multimodal semiconductor yield prediction — late fusion of 591 sensor features + 4096 wafer-map vision features | Multimodal · Manufacturing | <!-- FILL --> |
-| Explainable AI methods <!-- FILL: one-line description of your XAI paper --> | XAI | <!-- FILL --> |
-| <!-- FILL: add remaining papers (PINNs, SAR, seizure prediction, melanoma…) one row each --> | | |
+**Semantic intrusion detection** &nbsp;·&nbsp; <samp>graph ml, xai, security</samp><br>
+A heterogeneous GNN over network flows, a knowledge-graph reasoning stage, and an<br>
+LLM-written explanation attached to every detection — so a flag comes with its<br>
+reason. Under review, 2026.
 
-> 📌 My contribution on every listed paper: lead author — problem formulation, method design, and all experiments. <!-- FILL: adjust per-paper if not true for all; never overclaim -->
+**Multimodal semiconductor yield prediction** &nbsp;·&nbsp; <samp>multimodal, manufacturing</samp><br>
+Late fusion of 591 process-sensor features with 4096 vision features taken from<br>
+the wafer map. Under review, 2026.
 
----
+Lead author on both: problem formulation, method design, and all experiments.
 
-## 🛠️ Featured Projects
+<img src="./hd-stack.svg" width="620" alt="stack"/>
 
-### [MiniFlow → MiniFlow-Serving](https://github.com/Mannava-Daasaradhi/MiniFlow-Serving) — a deep-learning framework, then a serving layer for it
-The full lifecycle in one project: I wrote a **reverse-mode autograd engine from scratch** (no PyTorch/TF — tensors, computational graph, backprop), trained models on it, then built the layer that serves them.
+<samp>python &nbsp; rust &nbsp; kotlin &nbsp; c++ &nbsp; sql &nbsp; pytorch &nbsp; scikit-learn &nbsp; fastapi &nbsp; docker &nbsp; prometheus &nbsp; grafana &nbsp; linux</samp>
 
-- **Serving:** FastAPI `/predict`, sticky **A/B testing** with a two-proportion z-test, **PSI-based drift detection** running in the background
-- **Observability:** Prometheus metrics → Grafana dashboards, Docker Compose for the whole stack
-- **Engineering:** 24 tests, 89% coverage; p99 latency 97 ms <!-- FILL: qualify this — "(local Docker, [CPU model], synthetic load of N rps)" — an unqualified latency number is noise -->
-- **Why it matters:** most students train models; almost none have built both the framework *and* the monitoring that catches it degrading in production
+<img src="./hd-projects.svg" width="620" alt="projects"/>
 
-### [LLM from Scratch](https://github.com/Mannava-Daasaradhi/LLM_from_Scratch) — a transformer LM, no shortcuts
-Tokenizer → multi-head attention → positional encodings → training loop → sampling, all hand-built to own the internals. I can whiteboard attention, KV-caching, and why RoPE works — because I implemented them.
-<!-- FILL: add the one number this README needs: model size, dataset, final loss/perplexity, hardware + training time. "Trained a 12M-param GPT on TinyStories to X.XX val loss on a single T4 in N hours" turns this from tutorial-tier into evidence. -->
+**[MiniFlow-Serving](https://github.com/Mannava-Daasaradhi/MiniFlow-Serving)** &nbsp;·&nbsp; <samp>python, fastapi, docker</samp><br>
+A reverse-mode autograd engine written from scratch — tensors, graph, backprop, no<br>
+PyTorch — and then the layer that serves models trained on it: sticky A/B testing<br>
+decided by a two-proportion z-test, PSI drift detection on a background loop,<br>
+Prometheus into Grafana. 24 tests, 89% coverage.
 
-### [S-XG-NID](https://github.com/Mannava-Daasaradhi/S-XG-NID) — intrusion detection that explains itself
-Heterogeneous **graph neural network** over network flows (CICIDS dataset) with a knowledge-graph reasoning stage; every detection ships with an **LLM-generated human-readable explanation** of *why* it was flagged. Bridges my security, graph-ML, and XAI work.
-<!-- FILL: headline metric vs a named baseline, e.g. "F1 0.XX vs 0.XX (XGBoost baseline) on CICIDS-2017" -->
+**[LLM from Scratch](https://github.com/Mannava-Daasaradhi/LLM_from_Scratch)** &nbsp;·&nbsp; <samp>python, pytorch</samp><br>
+Tokenizer, multi-head attention, positional encodings, training loop, sampling —<br>
+all hand-built. I can whiteboard KV-caching and why RoPE works because I wrote them.
 
-### Userspace TCP/IP Stack (Rust) <!-- FILL: link — transfer the repo from the Kernalize account to this one FIRST -->
-ARP, IPv4, ICMP, and TCP — congestion control, segment reassembly, RTT estimation — running in Linux userspace over a TUN device. Built to understand what every `model.predict()` HTTP call actually rides on.
+**[S-XG-NID](https://github.com/Mannava-Daasaradhi/S-XG-NID)** &nbsp;·&nbsp; <samp>python, graph ml</samp><br>
+The research codebase for the intrusion-detection work above: heterogeneous graph<br>
+over CICIDS flows, knowledge-graph reasoning, generated explanations.
 
-### More
-- **[FabMind](https://github.com/Mannava-Daasaradhi/FabMind-Semiconductor-AI)** — the research codebase behind the yield-prediction paper, with explainability tooling
-- **[GlassBox-Attack](https://github.com/Mannava-Daasaradhi/GlassBox-Attack)** — adversarial attack/defense experiments; robustness evaluation of NN classifiers
-- **[StudyMetrics](https://github.com/Mannava-Daasaradhi/StudyMetrics)** + Battleship — two Android apps in Kotlin; StudyMetrics is built as 18 CI-gated Gradle modules
+**[FabMind](https://github.com/Mannava-Daasaradhi/FabMind-Semiconductor-AI)** &nbsp;·&nbsp; <samp>python</samp><br>
+The yield-prediction codebase, with the explainability tooling that goes with it.
 
----
+**[GlassBox-Attack](https://github.com/Mannava-Daasaradhi/GlassBox-Attack)** &nbsp;·&nbsp; <samp>python</samp><br>
+Adversarial attack and defense experiments — robustness evaluation of neural<br>
+classifiers, measured rather than asserted.
 
-## 🧰 What I work with
+**[StudyMetrics](https://github.com/Mannava-Daasaradhi/StudyMetrics)** &nbsp;·&nbsp; <samp>kotlin, android</samp><br>
+An Android app built as 18 CI-gated Gradle modules, because one module is a script<br>
+and eighteen is an architecture.
 
-| | |
-|---|---|
-| **ML / DL** | PyTorch · NumPy · scikit-learn · transformers & attention internals · GNNs · adversarial ML · explainability (GradCAM/SHAP) |
-| **Serving / MLOps** | FastAPI · Docker & Compose · Prometheus · Grafana · PSI drift detection · A/B test design · CI (GitHub Actions) |
-| **Languages** | Python · Rust · Kotlin · C++ · SQL · Bash |
-| **Systems** | Linux · TCP/IP (implemented one) · Android |
+<img src="./hd-stats.svg" width="620" alt="stats"/>
 
----
+<div align="center">
 
-## 📊 Activity
+<img src="./streak.svg" width="620" alt="Current and longest streak"/>
 
-<!-- These widgets render real data ONLY after you make your activity public (setup step 1).
-     With activity private they show an empty profile — worse than nothing. -->
-<p>
-  <img src="https://github-readme-stats.vercel.app/api?username=Mannava-Daasaradhi&show_icons=true&hide_rank=true&theme=default" height="160" alt="GitHub stats"/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Mannava-Daasaradhi&layout=compact&hide=html,css" height="160" alt="Top languages"/>
-</p>
+<img src="./langs.svg" width="620" alt="Top languages by bytes and by repo"/>
 
----
+<img src="./year.svg" width="620" alt="The last year, one character per day"/>
 
-## 🤝 Open to
+</div>
 
-- **Research internships** (Summer 2027) — XAI, multimodal learning, graph ML, LLM systems
-- **Remote part-time / contract ML engineering** on US hours — model serving, evaluation harnesses, inference infra
-- **Collaboration** on open-source LLM inference (vLLM ecosystem) and XAI benchmarking
+<img src="./hd-about-this-page.svg" width="620" alt="about this page"/>
 
-*Fastest way to evaluate me: open [MiniFlow-Serving](https://github.com/Mannava-Daasaradhi/MiniFlow-Serving), run `docker compose up`, and hit `/predict`.* <!-- FILL: verify this literally works from a fresh clone before publishing this sentence. If it doesn't, fix the repo, not the sentence. -->
+Every graphic here is generated, not embedded from anyone else's server.<br>
+`ascii.svg` is a photograph pushed through a thirteen-character ramp by<br>
+[`scripts/make_hacker.py`](scripts/make_hacker.py) — the hood is lit against black,<br>
+so brightness is the ink and the backdrop falls away to blank paper. The shadow<br>
+inside the hood had to be drawn rather than traced: those pixels read exactly zero,<br>
+identical to the backdrop, so the script separates them by topology instead of by<br>
+tone — flood the darkness in from the border, and whatever it cannot reach is the<br>
+inside of the hood. The stat graphics and these section headings are drawn by<br>
+[a scheduled action](.github/workflows/stats.yml) straight from the GitHub GraphQL<br>
+API, once a day, committing only what changed.
+
+They animate with SMIL inside the SVG, because GitHub strips scripts from<br>
+READMEs — and since nothing loads from a third party, nothing here can<br>
+rate-limit or go dark. The headings are SVGs for the same reason: GitHub also<br>
+strips CSS, so an image is the only way to put this page's own typeface on them.
+
+The typeface is [JetBrains Mono](scripts/fonts), subset to just the characters<br>
+each graphic draws and inlined as base64. That isn't only for looks: the<br>
+portrait's grid assumes an advance width of exactly 0.600 em, and a viewer whose<br>
+default monospace is narrower would otherwise see it squeezed.
+
+Language totals cover public repositories only. `year.svg` uses the portrait's<br>
+character ramp: `:` `+` `#` `@`, quiet to loud.
+
+The portrait's source photograph is from [Pixabay](https://pixabay.com/photos/mask-hoodie-hacker-attack-2883635/),<br>
+under the Pixabay Content License. The layout and the generated-graphics approach<br>
+are adapted, with thanks, from<br>
+[andriidrok1](https://github.com/andriidrok1/andriidrok1).
